@@ -1,400 +1,1310 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>النظام المتكامل — Brandzo Franchise Partners</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>مساعد الاجتماعات</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+/* === RESET === */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+body {
+  font-family: 'IBM Plex Sans Arabic', 'Segoe UI', sans-serif;
+  background: #0a0a0f;
+  color: #f0f0f8;
+  direction: rtl;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
 
-        :root {
-            --deep-red: #2d0006;
-            --crimson: #a0102a;
-            --bright-crimson: #c41e3a;
-            --gold: #DAAA3C;
-            --gold-light: #FFD700;
-            --orange: #E84820;
-            --dark-burgundy: #1a0008;
-            --shadow-glow: rgba(200, 30, 50, 0.45);
-            --glass-bg: rgba(255, 255, 255, 0.07);
-            --glass-border: rgba(255, 255, 255, 0.22);
-        }
+/* === VARS === */
+:root {
+  --red: #ff3b5c;
+  --teal: #00e5be;
+  --blue: #4a90ff;
+  --gold: #f5c842;
+  --surface: #14141f;
+  --surface2: #1c1c2e;
+  --border: rgba(255,255,255,0.1);
+  --text: #f0f0f8;
+  --text2: #a0a0c0;
+  --text3: #555570;
+  --nav-h: 60px;
+  --bot-h: 70px;
+}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+/* === BACKGROUND === */
+.bg-mesh {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 50% 35% at 20% 15%, rgba(74,144,255,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 80% 75%, rgba(0,229,190,0.06) 0%, transparent 60%);
+}
 
-        body {
-            font-family: 'Cairo', 'Arial', sans-serif;
-            background: linear-gradient(160deg, #140002 0%, #2d0006 20%, #4a0010 40%, #7a1028 65%, #a01832 85%, #b8203c 100%);
-            color: #fff;
-            direction: rtl;
-            min-height: 100vh;
-            padding: 20px 12px 40px;
-            font-size: 14px;
-            position: relative;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
+/* === LAYOUT === */
+#app {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-top: var(--nav-h);
+  padding-bottom: var(--bot-h);
+}
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            background:
-                radial-gradient(circle at 12% 18%, rgba(255, 215, 0, 0.07) 0%, transparent 38%),
-                radial-gradient(circle at 82% 22%, rgba(255, 200, 40, 0.05) 0%, transparent 34%),
-                radial-gradient(circle at 55% 48%, rgba(255, 90, 30, 0.09) 0%, transparent 52%),
-                radial-gradient(circle at 22% 68%, rgba(255, 215, 0, 0.055) 0%, transparent 32%),
-                radial-gradient(circle at 74% 72%, rgba(210, 30, 55, 0.08) 0%, transparent 44%),
-                radial-gradient(circle at 40% 85%, rgba(255, 180, 40, 0.04) 0%, transparent 36%),
-                radial-gradient(circle at 90% 55%, rgba(255, 215, 0, 0.045) 0%, transparent 30%);
-        }
+/* === NAVBAR === */
+#navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-h);
+  background: rgba(10,10,15,0.96);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 200;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
 
-        .page-wrapper {
-            position: relative;
-            z-index: 1;
-            max-width: 1100px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.nav-icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg,#4a90ff,#8b6fff);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+.nav-texts { display: flex; flex-direction: column; }
+.nav-title { font-size: 0.9rem; font-weight: 700; line-height: 1.2; }
+.nav-sub { font-size: 0.62rem; color: var(--text3); font-family: 'Space Mono', monospace; }
 
-        /* Luxury Header */
-        .luxury-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 18px;
-            padding: 22px 20px 16px;
-            flex-wrap: wrap;
-        }
-        .glass-circle {
-            width: 88px;
-            height: 88px;
-            border-radius: 50%;
-            background: var(--glass-bg);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 2px solid var(--glass-border);
-            box-shadow: 0 0 32px var(--shadow-glow), 0 0 60px rgba(180, 20, 40, 0.35), inset 0 0 22px rgba(255,255,255,0.12), inset 0 2px 6px rgba(255,255,255,0.18);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.1rem;
-            font-weight: 800;
-            color: #ffffff;
-            letter-spacing: 1px;
-            position: relative;
-            flex-shrink: 0;
-        }
-        .glass-circle::after {
-            content: '';
-            position: absolute;
-            top: 10px;
-            left: 16px;
-            width: 28px;
-            height: 16px;
-            background: rgba(255,255,255,0.32);
-            border-radius: 50%;
-            transform: rotate(-18deg);
-            pointer-events: none;
-        }
-        .brand-name {
-            font-size: 3rem;
-            font-weight: 800;
-            color: #ff3b3b;
-            text-shadow: 0 0 18px rgba(255,55,55,0.5), 0 0 40px rgba(220,30,30,0.35), 0 2px 4px rgba(0,0,0,0.5);
-            letter-spacing: 2px;
-            line-height: 1;
-        }
-        .gold-separator {
-            width: 72%;
-            max-width: 600px;
-            margin: 6px auto 14px;
-            border-bottom: 2px solid var(--gold-light);
-            opacity: 0.75;
-        }
-        .arabic-title-section {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            padding: 6px 16px 14px;
-            text-align: center;
-        }
-        .emoji-badge {
-            font-size: 1.4rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.09);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            border: 1px solid rgba(255,215,0,0.3);
-            box-shadow: 0 0 10px rgba(255,200,30,0.2);
-            flex-shrink: 0;
-        }
-        .main-arabic-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #FFE4B5;
-            text-shadow: 0 0 8px rgba(255,200,80,0.25);
-            letter-spacing: 0.4px;
-            margin: 0 4px;
-        }
+.nav-right {
+  display: flex; align-items: center; gap: 8px;
+}
+.status-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  color: var(--text2);
+}
+.sdot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #444;
+  transition: background 0.3s;
+  flex-shrink: 0;
+}
+.sdot.rec { background: var(--red); animation: sdBlink 1.2s ease-in-out infinite; }
+.sdot.proc { background: var(--gold); animation: sdBlink 1.8s ease-in-out infinite; }
+.sdot.ok { background: var(--teal); }
+@keyframes sdBlink { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
 
-        /* Cards container */
-        .cards-container {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            width: 100%;
-            margin-top: 15px;
-        }
-        .glass-card {
-            background: rgba(20, 0, 6, 0.65);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border: 1px solid rgba(255,215,0,0.25);
-            border-radius: 20px;
-            padding: 20px 24px;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 20px rgba(200,30,50,0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .glass-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 16px 48px rgba(0,0,0,0.7), 0 0 35px rgba(255,80,30,0.4);
-        }
-        .card-title {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: var(--gold-light);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 1px dashed rgba(255,215,0,0.5);
-            padding-bottom: 8px;
-        }
-        .card-title .icon {
-            font-size: 1.8rem;
-        }
-        .mermaid-wrapper {
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            padding: 16px;
-            display: flex;
-            justify-content: center;
-            overflow-x: auto;
-        }
-        .mermaid {
-            font-family: 'Cairo', sans-serif !important;
-            font-weight: 600;
-        }
+.icon-btn {
+  width: 34px; height: 34px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text2);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+}
 
-        /* Footer */
-        .brand-footer {
-            text-align: center;
-            padding: 24px 16px 8px;
-            margin-top: 20px;
-            width: 100%;
-        }
-        .brand-footer p {
-            font-family: 'Cairo', sans-serif;
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: #FFD700;
-            text-shadow: 0 0 12px rgba(255,215,0,0.35), 0 0 24px rgba(255,180,30,0.2);
-            letter-spacing: 0.6px;
-        }
+/* === CONTENT === */
+.content {
+  width: 100%;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
 
-        @media print {
-            body { background: #fff !important; color: #000; }
-            body::before { display: none; }
-            .glass-card { background: #fff; border: 1px solid #ccc; box-shadow: none; backdrop-filter: none; }
-            .card-title { color: #333; }
-        }
-    </style>
+/* === HERO (RECORD) === */
+.hero {
+  width: 100%;
+  padding: 24px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+/* Ring */
+.ring-wrap {
+  position: relative;
+  width: 110px; height: 110px;
+  display: flex; align-items: center; justify-content: center;
+}
+.ring { position: absolute; border-radius: 50%; border: 2px solid transparent; transition: all 0.4s; }
+.r1 { inset: 0; border-color: rgba(255,59,92,0.15); }
+.r2 { inset: -10px; border-color: rgba(255,59,92,0.08); }
+.r3 { inset: -20px; border-color: rgba(255,59,92,0.04); }
+.ring-wrap.live .r1 { border-color: rgba(255,59,92,0.55); animation: rp1 1.5s ease-in-out infinite; }
+.ring-wrap.live .r2 { border-color: rgba(255,59,92,0.3); animation: rp1 1.5s ease-in-out infinite 0.2s; }
+.ring-wrap.live .r3 { border-color: rgba(255,59,92,0.12); animation: rp1 1.5s ease-in-out infinite 0.4s; }
+@keyframes rp1 { 0%,100%{transform:scale(1);} 50%{transform:scale(1.06);} }
+
+#btnMainRecord {
+  width: 74px; height: 74px;
+  border-radius: 50%;
+  border: none; cursor: pointer;
+  background: linear-gradient(135deg,#ff3b5c,#ff6b35);
+  box-shadow: 0 6px 28px rgba(255,59,92,0.4);
+  font-size: 26px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.25s;
+  position: relative; z-index: 2;
+}
+#btnMainRecord:active { transform: scale(0.93); }
+#btnMainRecord.rec-active {
+  background: var(--surface2);
+  border: 2px solid var(--red);
+  box-shadow: 0 4px 20px rgba(255,59,92,0.25);
+  animation: recPulse 1.5s ease-in-out infinite;
+}
+@keyframes recPulse { 0%,100%{box-shadow:0 4px 20px rgba(255,59,92,0.25);} 50%{box-shadow:0 4px 30px rgba(255,59,92,0.55);} }
+
+/* Waveform */
+.wave-bars {
+  display: flex; align-items: center; gap: 3px; height: 28px;
+}
+.wave-bars .b {
+  width: 3px; border-radius: 3px;
+  background: #333;
+  height: 5px;
+  transition: height 0.12s ease, background 0.3s;
+}
+.wave-bars.live .b { background: var(--red); }
+
+/* Controls row */
+.ctrl-row {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.cbtn {
+  flex: 1;
+  padding: 10px 8px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+  cursor: pointer;
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  gap: 5px;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.cbtn:disabled { opacity: 0.3; cursor: not-allowed; }
+.cbtn:active:not(:disabled) { transform: scale(0.96); }
+.cbtn.red { background: rgba(255,59,92,0.12); border-color: rgba(255,59,92,0.35); color: var(--red); }
+.cbtn.teal { background: rgba(0,229,190,0.1); border-color: rgba(0,229,190,0.35); color: var(--teal); }
+.cbtn.blue { background: rgba(74,144,255,1); border-color: var(--blue); color: #fff; font-weight: 700; }
+
+select.cbtn {
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 8px center;
+  padding-left: 22px;
+}
+
+/* Lang row */
+.lang-row {
+  width: 100%;
+  padding: 0 16px;
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+.lang-toggle {
+  padding: 10px 14px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.05);
+  color: var(--text2);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 5px;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.lang-toggle:active { transform: scale(0.96); }
+
+/* === CARD === */
+.card {
+  margin: 12px 12px 0;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.card-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 15px;
+  border-bottom: 1px solid var(--border);
+  gap: 8px;
+}
+.card-title {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 0.85rem; font-weight: 700;
+}
+.badge-live {
+  font-size: 0.68rem; padding: 2px 8px;
+  border-radius: 20px;
+  background: rgba(255,59,92,0.15);
+  border: 1px solid rgba(255,59,92,0.4);
+  color: var(--red);
+  display: none;
+  animation: bdBlink 2s ease-in-out infinite;
+}
+@keyframes bdBlink { 0%,100%{border-color:rgba(255,59,92,0.4);} 50%{border-color:rgba(255,59,92,0.8);} }
+.card-body { padding: 13px 15px; }
+
+/* === TRANSCRIPT AREA === */
+.ta {
+  width: 100%;
+  min-height: 190px;
+  max-height: 300px;
+  overflow-y: auto;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 12px;
+  font-size: 0.9rem;
+  line-height: 1.8;
+  color: var(--text);
+  outline: none;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+.ta:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(74,144,255,0.1); }
+.ta:empty::before { content: attr(data-ph); color: var(--text3); font-style: italic; pointer-events: none; }
+.ta .sl { display: block; color: var(--teal); font-size: 0.72rem; font-weight: 700; margin-top: 8px; font-family: 'Space Mono', monospace; }
+.ta .fi { color: var(--text); }
+.ta .it { color: var(--text3); font-style: italic; }
+.ta::-webkit-scrollbar { width: 4px; }
+.ta::-webkit-scrollbar-track { background: transparent; }
+.ta::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+
+.wc { margin-top: 7px; font-size: 0.7rem; color: var(--text3); font-family: 'Space Mono', monospace; }
+.wc strong { color: var(--text2); }
+
+/* === SUMMARY BLOCKS === */
+.sum-blocks { display: flex; flex-direction: column; gap: 9px; }
+.sb {
+  background: rgba(0,0,0,0.2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 11px 13px;
+}
+.sb-title {
+  font-size: 0.75rem; font-weight: 700;
+  font-family: 'Space Mono', monospace;
+  display: flex; align-items: center; gap: 5px;
+  margin-bottom: 7px;
+}
+.sb-title.teal { color: var(--teal); }
+.sb-title.blue { color: var(--blue); }
+.sb-title.gold { color: var(--gold); }
+.sb-body { font-size: 0.83rem; color: var(--text2); line-height: 1.65; }
+.sb-body.empty { color: var(--text3); font-style: italic; }
+
+/* === ACTION GRID === */
+.act-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 11px;
+}
+.act-btn {
+  padding: 11px 10px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  cursor: pointer;
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+  text-align: center;
+}
+.act-btn:active { transform: scale(0.96); }
+.act-btn.teal { background: rgba(0,229,190,0.08); border-color: rgba(0,229,190,0.3); color: var(--teal); }
+.act-btn.blue { background: rgba(74,144,255,0.08); border-color: rgba(74,144,255,0.3); color: var(--blue); }
+
+/* Translation area */
+.trans-area {
+  width: 100%;
+  min-height: 100px;
+  max-height: 200px;
+  overflow-y: auto;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 11px 13px;
+  font-size: 0.87rem;
+  line-height: 1.75;
+  color: var(--text);
+  direction: ltr;
+  text-align: left;
+  font-family: 'Segoe UI', sans-serif;
+}
+.trans-area:empty::before { content: attr(data-ph); color: var(--text3); font-style: italic; pointer-events: none; }
+.trans-note { margin-top: 6px; font-size: 0.67rem; color: var(--text3); font-family: 'Space Mono', monospace; }
+
+/* === SIGNATURE === */
+.sig-card {
+  margin: 12px 12px 0;
+  padding: 15px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(245,200,66,0.2);
+  border-radius: 14px;
+  display: flex; align-items: center; gap: 13px;
+  position: relative;
+  overflow: hidden;
+}
+.sig-card::before {
+  content:'';
+  position: absolute; top:0; left:0; right:0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.sig-av {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg,#f5c842,#ff8f00);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 19px; flex-shrink: 0;
+}
+.sig-info { flex: 1; }
+.sig-name { font-size: 0.9rem; font-weight: 700; }
+.sig-role { font-size: 0.68rem; color: var(--gold); font-family: 'Space Mono', monospace; margin-top: 2px; }
+.sig-date { font-size: 0.66rem; color: var(--text3); font-family: 'Space Mono', monospace; direction: ltr; }
+
+/* === BOTTOM BAR === */
+#botbar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: var(--bot-h);
+  background: rgba(10,10,15,0.97);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 16px;
+  z-index: 200;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  gap: 10px;
+}
+#btnStartBottom {
+  width: 50px; height: 50px;
+  border-radius: 50%;
+  border: none; cursor: pointer;
+  background: linear-gradient(135deg,#ff3b5c,#ff6b35);
+  box-shadow: 0 4px 18px rgba(255,59,92,0.4);
+  font-size: 20px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.25s;
+  flex-shrink: 0;
+}
+#btnStartBottom:active { transform: scale(0.93); }
+#btnStartBottom.rec-active {
+  background: var(--surface2);
+  border: 2px solid var(--red);
+  animation: recPulse 1.5s ease-in-out infinite;
+}
+.bb-btn {
+  flex: 1;
+  padding: 9px 6px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.05);
+  color: var(--text2);
+  cursor: pointer;
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  gap: 4px;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.bb-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.bb-btn:active:not(:disabled) { transform: scale(0.96); }
+.bb-btn.teal { background: rgba(0,229,190,0.1); border-color: rgba(0,229,190,0.3); color: var(--teal); }
+
+/* === TOAST === */
+#toast {
+  position: fixed;
+  bottom: calc(var(--bot-h) + 12px);
+  left: 50%;
+  transform: translateX(-50%) translateY(15px);
+  background: #1c1c2e;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--text);
+  padding: 9px 20px;
+  border-radius: 30px;
+  font-size: 0.83rem;
+  font-weight: 600;
+  z-index: 999;
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.175,0.885,0.32,1.275);
+  box-shadow: 0 6px 28px rgba(0,0,0,0.5);
+  white-space: nowrap;
+  pointer-events: none;
+  max-width: 90vw;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+#toast.success { border-color: rgba(0,229,190,0.45); }
+
+/* === BROWSER WARN === */
+#bwarn {
+  display: none;
+  width: 100%;
+  background: var(--red);
+  color: #fff;
+  text-align: center;
+  padding: 10px 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.5;
+  z-index: 300;
+}
+
+/* === PDF TEMPLATE === */
+.pdf-t {
+  position: absolute; left: -9999px; top: 0;
+  width: 760px; padding: 48px 48px 40px;
+  background: #fff; color: #1a1a1a;
+  font-family: 'Segoe UI', 'Tajawal', sans-serif;
+  line-height: 1.7; direction: rtl;
+}
+.pdf-t .ph { display:flex; justify-content:space-between; align-items:flex-start; border-bottom:3px solid #4a90ff; padding-bottom:20px; margin-bottom:24px; }
+.pdf-t .ph h1 { font-size:1.6rem; color:#0a0a1f; margin-bottom:4px; }
+.pdf-t .ph p { font-size:0.8rem; color:#666; }
+.pdf-t .psig { background:#fffbee; border:1px solid #f5c842; border-radius:9px; padding:11px 16px; text-align:left; }
+.pdf-t .psig .sl { font-size:0.65rem; color:#999; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:2px; }
+.pdf-t .psig .sn { font-size:0.95rem; font-weight:700; }
+.pdf-t .psig .sr { font-size:0.72rem; color:#c8860a; margin-top:2px; }
+.pdf-t .ps { margin-bottom:18px; padding:14px 16px; background:#f7f9ff; border-radius:9px; border-right:5px solid #4a90ff; }
+.pdf-t .ps h3 { color:#4a90ff; margin-bottom:8px; font-size:1rem; }
+.pdf-t .ps p, .pdf-t .ps li { color:#333; font-size:0.88rem; margin-bottom:4px; }
+.pdf-t .ps.en { direction:ltr; text-align:left; background:#f0fbf8; border-right:none; border-left:5px solid #00c9a7; }
+.pdf-t .ps.en h3 { color:#00a587; }
+.pdf-t .pf { margin-top:32px; padding-top:16px; border-top:1px solid #ddd; display:flex; justify-content:space-between; font-size:0.72rem; color:#999; }
+.pdf-t .pf .fs { color:#666; font-weight:600; }
+
+/* Spacing at bottom of content */
+.spacer { height: 8px; }
+</style>
 </head>
 <body>
-<div class="page-wrapper">
+<div class="bg-mesh"></div>
 
-    <!-- Header -->
-    <header class="luxury-header">
-        <div class="glass-circle">BFP</div>
-        <span class="brand-name">Brandzo</span>
-    </header>
-    <div class="gold-separator"></div>
-    <div class="arabic-title-section">
-        <span class="emoji-badge">⚙️</span>
-        <span class="emoji-badge">📊</span>
-        <span class="emoji-badge">🛡️</span>
-        <span class="main-arabic-title">النظام المتكامل: الدورة المستندية · الهيكل الوظيفي · سياسة الجودة</span>
-        <span class="emoji-badge">🏢</span>
-        <span class="emoji-badge">📋</span>
-        <span class="emoji-badge">✨</span>
+<div id="bwarn">
+  ⚠️ للتسجيل الصوتي، افتح الملف في تطبيق Chrome<br>
+  <span style="font-weight:400;font-size:0.73rem;">Open in Chrome browser for voice recording</span>
+</div>
+
+<div id="app">
+
+  <nav id="navbar">
+    <div class="nav-brand">
+      <div class="nav-icon">🎙️</div>
+      <div class="nav-texts">
+        <div class="nav-title" data-lang-key="app_title">مساعد الاجتماعات</div>
+        <div class="nav-sub">AI Meeting Assistant</div>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="status-pill">
+        <span class="sdot" id="statusDot"></span>
+        <span id="statusText" data-lang-key="status_ready">جاهز</span>
+      </div>
+      <button class="icon-btn" id="btnClearAll" title="مسح">🗑️</button>
+    </div>
+  </nav>
+
+  <div class="content">
+
+    <div class="hero">
+      <div class="ring-wrap" id="waveformRing">
+        <div class="ring r3"></div>
+        <div class="ring r2"></div>
+        <div class="ring r1"></div>
+        <button id="btnMainRecord">🎙️</button>
+      </div>
+
+      <div class="wave-bars" id="waveformBars">
+        <div class="b" style="height:5px"></div>
+        <div class="b" style="height:11px"></div>
+        <div class="b" style="height:19px"></div>
+        <div class="b" style="height:7px"></div>
+        <div class="b" style="height:23px"></div>
+        <div class="b" style="height:13px"></div>
+        <div class="b" style="height:17px"></div>
+        <div class="b" style="height:5px"></div>
+        <div class="b" style="height:20px"></div>
+        <div class="b" style="height:9px"></div>
+      </div>
+
+      <div class="ctrl-row" style="padding:0 16px;">
+        <button class="cbtn red" id="btnStop" disabled>⏹️ <span data-lang-key="btn_stop">إيقاف</span></button>
+        <button class="cbtn teal" id="btnPause" disabled>⏸️ <span id="pauseLabel" data-lang-key="btn_pause">تعليق</span></button>
+        <select class="cbtn" id="langSelect" style="flex:1.4;">
+          <option value="ar-SA">🇸🇦 العربية</option>
+          <option value="ar-EG">🇪🇬 مصري</option>
+          <option value="en-US">🇺🇸 English</option>
+          <option value="en-GB">🇬🇧 English UK</option>
+        </select>
+      </div>
+
+      <div class="lang-row">
+        <button class="lang-toggle" id="btnLangUI">🌐 <span id="langLabel">AR</span></button>
+        <button class="cbtn blue" id="btnSummarize" style="flex:1;">✨ <span data-lang-key="btn_summarize">تلخيص ذكي</span></button>
+        <button class="cbtn" id="btnCopyAll" style="flex:0.6;padding:10px 6px;">📋</button>
+      </div>
     </div>
 
-    <!-- Cards -->
-    <div class="cards-container">
-
-        <!-- Card 1: الدورة المستندية -->
-        <div class="glass-card">
-            <div class="card-title"><span class="icon">🔄</span> الدورة المستندية الكاملة</div>
-            <div class="mermaid-wrapper">
-                <div class="mermaid">
-flowchart TD
-    subgraph "Brandzo Franchise Partners - الدورة المستندية الكاملة"
-        direction TB
-        A["نظام WMS / ERP"] -->|"إصدار آلي عند نقطة إعادة الطلب"| B("طلب الشراء PR")
-        B -->|"قسم المشتريات"| C("أمر الشراء الرسمي PO")
-        C -->|"إرسال للمورد"| D("المورد")
-        D -->|"إشعار شحن مسبق ASN"| E("الاستلام والفحص")
-        E -->|"فحص درجة الحرارة CCP 1"| F{"نتيجة الفحص؟"}
-        F -->|"مطابق"| G("مذكرة استلام بضائع GRN + فحص الجودة")
-        F -->|"مخالف"| H["رفض الشحنة"]
-        G -->|"نظام WMS: تخزين موجه"| I("بطاقة مراقبة المخزون Bin Card")
-        I --> J["مواقع التخزين (FEFO)"]
-        J --> K("طلب توريد الفرع Store Req.")
-        K --> L("قائمة التجميع والتعبئة Picking Slip")
-        L --> M["تدقيق وتعبئة"]
-        M --> N("إذن خروج البضاعة Delivery Note")
-        N --> O("شحن للفرع")
-        O -->|"مرتجعات"| P("نموذج مرتجع مخزني GRN-R")
-        P --> Q["فحص المرتجعات"]
-        Q --> R{"إجراء التصرف:"}
-        R -->|"سليم"| I
-        R -->|"تالف / منتهي"| S("إتلاف / إرجاع للمورد")
-    end
-                </div>
-            </div>
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">📝 <span data-lang-key="transcript_title">تفريغ المحادثة</span></div>
+        <span class="badge-live" id="badgeLive">● مباشر</span>
+      </div>
+      <div class="card-body">
+        <div class="ta" id="transcriptArea" contenteditable="true"
+          data-ph="اكتب ملاحظاتك هنا أو ابدأ التسجيل... ✍️"
+          data-lang-key-placeholder="transcript_placeholder">
         </div>
-
-        <!-- Card 2: الهيكل الوظيفي -->
-        <div class="glass-card">
-            <div class="card-title"><span class="icon">🏛️</span> الهيكل الوظيفي - الإدارة العليا والتشغيل</div>
-            <div class="mermaid-wrapper">
-                <div class="mermaid">
-graph TD
-    subgraph "الهيكل الوظيفي - الإدارة العليا"
-        CEO["مدير عمليات المستودع الرئيسي"] --> OPS["مدير المستودع التنفيذي"]
-        CEO --> IT["مدير أنظمة المعلومات والتحول الرقمي"]
-        CEO --> QA["مدير الجودة والسلامة الغذائية"]
-        CEO --> FIN["مدير المحاسبة والرقابة المالية"]
-    end
-
-    subgraph "إدارات التشغيل"
-        OPS --> REC["إدارة الاستلام والرقابة"]
-        OPS --> STO["إدارة التخزين وتحديد المواقع"]
-        OPS --> PICK["إدارة تحضير الطلبات والتوزيع"]
-        OPS --> TRANS["إدارة أسطول النقل"]
-        OPS --> RET["إدارة المرتجعات"]
-        QA --> QC["فرق فحص الجودة"]
-    end
-
-    subgraph "تفاصيل إدارة الاستلام"
-        REC --> REC_MGR["مدير قسم الاستلام"]
-        REC_MGR --> SHIFT_AM["مشرف الفترة الصباحية"]
-        REC_MGR --> SHIFT_PM["مشرف الفترة المسائية"]
-        REC_MGR --> DATA["فريق إدخال البيانات"]
-        REC_MGR --> DOCK["عمال الرصيف والمناولة"]
-    end
-
-    subgraph "تفاصيل إدارة التخزين"
-        STO --> STO_MGR["مدير عمليات التخزين"]
-        STO_MGR --> ENG["مهندس تخطيط المستودع"]
-        STO_MGR --> SUPV["مشرفو المناطق"]
-        SUPV --> FREEZ["مشرف المجمدات"]
-        SUPV --> CHILL["مشرف المبردات"]
-        SUPV --> DRY["مشرف الجاف"]
-        SUPV --> VAL["مشرف المواد عالية القيمة"]
-        STO_MGR --> FORK["مشغلو الرافعات (40-60)"]
-        STO_MGR --> INV["مراقبو المخزون (10-12)"]
-    end
-                </div>
-            </div>
-        </div>
-
-        <!-- Card 3: سياسة HACCP -->
-        <div class="glass-card">
-            <div class="card-title"><span class="icon">🧪</span> السياسة العامة - نقاط التحكم الحرجة HACCP</div>
-            <div class="mermaid-wrapper">
-                <div class="mermaid">
-graph LR
-    subgraph "السياسة العامة - نقاط التحكم الحرجة HACCP"
-        direction TB
-        CCP1["CCP 1: استلام المبردات والمجمدات"]
-        CCP1 -->|"فحص الحرارة عند الاستلام"| LIMIT1{"المبردات ≤ 4°م <br/> المجمدات ≤ -18°م"}
-        LIMIT1 -->|"مقبول"| ACCEPT["قبول الشحنة"]
-        LIMIT1 -->|"مرفوض"| REJECT["رفض كامل الشحنة"]
-
-        CCP2["CCP 2: التخزين في غرف التبريد"]
-        CCP2 -->|"مراقبة 24/7"| ALARM{"عطل / ارتفاع حرارة"}
-        ALARM -->|"إنذار"| SMS["تنبيه SMS للإدارة"]
-        ALARM -->|"إجراء"| ISOLATE["عزل المنتج ونقله للحجر"]
-
-        CCP3["CCP 3: إدارة المواد المسببة للحساسية"]
-        CCP3 -->|"فصل مساحات"| CHECK{"اختبار مسحة بروتينية"}
-        CHECK -->|"نظيف"| SAFE["آمن للإنتاج"]
-        CHECK -->|"ملوث"| CLEAN["إعادة تنظيف أنزيمي"]
-    end
-                </div>
-            </div>
-        </div>
-
+        <div class="wc"><span data-lang-key="word_count">الكلمات:</span> <strong id="wordCount">0</strong></div>
+      </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="brand-footer">
-        <p>إعداد محمد البرشي</p>
-    </footer>
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">🧠 <span data-lang-key="summary_title">الملخص الذكي</span></div>
+      </div>
+      <div class="card-body">
+        <div class="sum-blocks">
+          <div class="sb">
+            <div class="sb-title teal">🔑 <span data-lang-key="key_points">النقاط الرئيسية</span></div>
+            <div class="sb-body empty" id="kpBody">لم يتم التلخيص بعد</div>
+          </div>
+          <div class="sb">
+            <div class="sb-title blue">✅ <span data-lang-key="decisions">القرارات</span></div>
+            <div class="sb-body empty" id="decBody">—</div>
+          </div>
+          <div class="sb">
+            <div class="sb-title gold">📋 <span data-lang-key="action_items">المهام</span></div>
+            <div class="sb-body empty" id="actBody">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">🌍 <span data-lang-key="translation_export">الترجمة والتصدير</span></div>
+      </div>
+      <div class="card-body">
+        <div class="act-grid">
+          <button class="act-btn teal" id="btnTranslate">🔄 <span data-lang-key="btn_translate">ترجمة</span></button>
+          <button class="act-btn blue" id="btnExportPDF">📄 <span data-lang-key="btn_export_pdf">PDF</span></button>
+        </div>
+        <div class="trans-area" id="translationArea" data-ph="English translation will appear here..."></div>
+        <div class="trans-note" data-lang-key="translation_note">مدعوم بترجمة ذكاء اصطناعي مجانية</div>
+      </div>
+    </div>
+
+    <div class="sig-card">
+      <div class="sig-av">👤</div>
+      <div class="sig-info">
+        <div class="sig-name">محمد البرشي</div>
+        <div class="sig-role">OFFICIAL MEETING RECORDER</div>
+        <div class="sig-date" id="sigStamp">—</div>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+  </div></div><div id="botbar">
+  <button id="btnStartBottom">🎙️</button>
+  <button class="bb-btn" id="btnStopBottom" disabled>⏹️ <span data-lang-key="btn_stop">إيقاف</span></button>
+  <button class="bb-btn teal" id="btnExportBottom">📄 PDF</button>
+  <button class="bb-btn" id="btnSumBottom">✨ <span data-lang-key="btn_summarize">ملخص</span></button>
+</div>
+
+<div id="toast"></div>
+
+<div class="pdf-t" id="pdfTemplate">
+  <div class="ph">
+    <div>
+      <h1>📋 محضر اجتماع</h1>
+      <p>Meeting Minutes — AI Assistant</p>
+      <p style="margin-top:3px;color:#888;font-size:0.75rem;" id="pdfDate"></p>
+    </div>
+    <div class="psig">
+      <div class="sl">Recorded By</div>
+      <div class="sn">محمد البرشي</div>
+      <div class="sr">مسجل اجتماعات رسمي</div>
+    </div>
+  </div>
+  <div class="ps">
+    <h3>📝 تفريغ المحادثة</h3>
+    <p id="pdfTranscript" style="white-space:pre-wrap;"></p>
+  </div>
+  <div class="ps" id="pdfSummarySection">
+    <h3>🧠 الملخص</h3>
+    <div id="pdfSummary"></div>
+  </div>
+  <div class="ps en" id="pdfTranslationSection" style="display:none;">
+    <h3>🌍 English Translation</h3>
+    <p id="pdfTranslation" style="white-space:pre-wrap;direction:ltr;text-align:left;"></p>
+  </div>
+  <div class="pf">
+    <div>مساعد الاجتماعات الذكي · AI Meeting Assistant</div>
+    <div class="fs">✍️ محمد البرشي — مسجل اجتماعات</div>
+  </div>
 </div>
 
 <script>
-    mermaid.initialize({
-        startOnLoad: true,
-        theme: 'base',
-        themeVariables: {
-            primaryColor: '#2d0006',
-            primaryTextColor: '#FFD700',
-            primaryBorderColor: '#DAAA3C',
-            lineColor: '#E84820',
-            secondaryColor: '#1a0008',
-            tertiaryColor: '#2d0006',
-            background: 'transparent',
-            mainBkg: '#1a0008',
-            nodeBorder: '#DAAA3C',
-            clusterBkg: 'rgba(20,0,6,0.8)',
-            clusterBorder: '#FFD700',
-            titleColor: '#FFD700',
-            edgeLabelBackground: '#1a0008',
-            nodeTextColor: '#FFE4B5',
-            fontFamily: 'Cairo'
-        },
-        flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true,
-            curve: 'basis',
-            rankSpacing: 30,
-            nodeSpacing: 20
-        }
+(function(){
+  var hasSR = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+  var badURI = location.href.indexOf('content://') === 0 || location.href.indexOf('file://') === 0;
+  if(!hasSR || badURI){
+    var w = document.getElementById('bwarn');
+    w.style.display = 'block';
+  }
+})();
+</script>
+
+<script>
+(function(){
+"use strict";
+
+// ── State ──
+let recognition = null;
+let isRecording = false;
+let isPaused = false;
+let finalTranscript = '';
+let interimTranscript = '';
+let transcriptSegments = [];
+let summaryData = null;
+let englishTranslation = '';
+let waveInterval = null;
+let currentLang = 'ar';
+
+// ── DOM ──
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+const transcriptArea = $('#transcriptArea');
+const translationArea = $('#translationArea');
+const statusDot = $('#statusDot');
+const statusText = $('#statusText');
+const badgeLive = $('#badgeLive');
+const wordCountEl = $('#wordCount');
+const langSelect = $('#langSelect');
+const toast = $('#toast');
+const pdfTemplate = $('#pdfTemplate');
+const waveformBars = $('#waveformBars');
+const waveformRing = $('#waveformRing');
+const langLabel = $('#langLabel');
+const sigStamp = $('#sigStamp');
+
+// Buttons
+const btnMainRecord = $('#btnMainRecord');
+const btnStop = $('#btnStop');
+const btnPause = $('#btnPause');
+const btnStartBottom = $('#btnStartBottom');
+const btnStopBottom = $('#btnStopBottom');
+const btnExportBottom = $('#btnExportBottom');
+const btnSumBottom = $('#btnSumBottom');
+const btnSummarize = $('#btnSummarize');
+const btnTranslate = $('#btnTranslate');
+const btnExportPDF = $('#btnExportPDF');
+const btnClearAll = $('#btnClearAll');
+const btnCopyAll = $('#btnCopyAll');
+const btnLangUI = $('#btnLangUI');
+
+// ── i18n ──
+const i18n = {
+  ar:{
+    app_title:'مساعد الاجتماعات الذكي',
+    status_ready:'جاهز',
+    status_recording:'جاري التسجيل...',
+    status_paused:'متوقف مؤقتاً',
+    status_processing:'جاري المعالجة...',
+    btn_stop:'إيقاف',
+    btn_pause:'تعليق',
+    btn_resume:'استئناف',
+    btn_summarize:'تلخيص ذكي',
+    btn_translate:'ترجمة للإنجليزية',
+    btn_export_pdf:'تصدير PDF',
+    btn_clear:'مسح الكل',
+    btn_copy:'نسخ الكل',
+    transcript_title:'تفريغ المحادثة',
+    transcript_placeholder:'اكتب ملاحظاتك هنا أو ابدأ التسجيل... ✍️',
+    summary_title:'الملخص الذكي',
+    key_points:'النقاط الرئيسية',
+    decisions:'القرارات',
+    action_items:'المهام',
+    translation_export:'الترجمة والتصدير',
+    translation_placeholder:'الترجمة ستظهر هنا...',
+    translation_note:'مدعوم بخدمة ترجمة ذكاء اصطناعي مجانية',
+    word_count:'الكلمات:',
+    badge_live:'● مباشر',
+    mic_status:'الميكروفون جاهز',
+    toast_copied:'✅ تم النسخ',
+    toast_pdf_exported:'✅ تم تصدير PDF',
+    toast_translated:'✅ تمت الترجمة',
+    toast_summarized:'✅ تم التلخيص',
+    toast_cleared:'🗑️ تم المسح',
+    toast_saved:'💾 تم الحفظ',
+    toast_no_content:'⚠️ لا يوجد محتوى',
+    toast_mic_error:'⚠️ تعذر الوصول للميكروفون',
+    toast_no_browser:'⚠️ المتصفح لا يدعم التسجيل. استخدم Chrome.',
+    no_summary:'لم يتم التلخيص بعد',
+  },
+  en:{
+    app_title:'AI Meeting Assistant',
+    status_ready:'Ready',
+    status_recording:'Recording...',
+    status_paused:'Paused',
+    status_processing:'Processing...',
+    btn_stop:'Stop',
+    btn_pause:'Pause',
+    btn_resume:'Resume',
+    btn_summarize:'Smart Summary',
+    btn_translate:'Translate to English',
+    btn_export_pdf:'Export PDF',
+    btn_clear:'Clear All',
+    btn_copy:'Copy All',
+    transcript_title:'Transcript',
+    transcript_placeholder:'Type your notes or start recording... ✍️',
+    summary_title:'AI Summary',
+    key_points:'Key Points',
+    decisions:'Decisions',
+    action_items:'Action Items',
+    translation_export:'Translation & Export',
+    translation_placeholder:'English translation will appear here...',
+    translation_note:'Powered by free AI translation service',
+    word_count:'Words:',
+    badge_live:'● Live',
+    mic_status:'Microphone ready',
+    toast_copied:'✅ Copied to clipboard',
+    toast_pdf_exported:'✅ PDF exported successfully',
+    toast_translated:'✅ Translation complete',
+    toast_summarized:'✅ Summary generated',
+    toast_cleared:'🗑️ Content cleared',
+    toast_saved:'💾 Recording saved',
+    toast_no_content:'⚠️ No content available',
+    toast_mic_error:'⚠️ Microphone access denied',
+    toast_no_browser:'⚠️ Browser not supported. Use Chrome.',
+    no_summary:'No summary yet. Record then tap Summarize.',
+  }
+};
+
+function t(k){ return i18n[currentLang]?.[k] || i18n.ar[k] || k; }
+
+function updateUI(){
+  $$('[data-lang-key]').forEach(el=>{
+    const k=el.getAttribute('data-lang-key');
+    el.textContent=t(k);
+  });
+  $$('[data-lang-key-placeholder]').forEach(el=>{
+    const k=el.getAttribute('data-lang-key-placeholder');
+    el.setAttribute('data-ph',t(k));
+  });
+  if(currentLang==='en'){
+    document.documentElement.setAttribute('dir','ltr');
+    document.documentElement.setAttribute('lang','en');
+  } else {
+    document.documentElement.setAttribute('dir','rtl');
+    document.documentElement.setAttribute('lang','ar');
+  }
+  langLabel.textContent=currentLang==='ar'?'AR':'EN';
+  updateStates();
+  updateSigStamp();
+}
+
+function updateSigStamp(){
+  const now=new Date();
+  sigStamp.textContent=now.toLocaleDateString(currentLang==='ar'?'ar-SA':'en-US',{year:'numeric',month:'short',day:'numeric'});
+}
+
+// ── States ──
+function updateStates(){
+  if(isRecording && !isPaused){
+    btnMainRecord.textContent='⏸️';
+    btnMainRecord.classList.add('rec-active');
+    btnStartBottom.textContent='⏸️';
+    btnStartBottom.classList.add('rec-active');
+    btnStop.disabled=false;
+    btnPause.disabled=false;
+    btnStopBottom.disabled=false;
+    btnPause.innerHTML='⏸️ <span>'+t('btn_pause')+'</span>';
+    statusDot.className='sdot rec';
+    statusText.textContent=t('status_recording');
+    badgeLive.style.display='inline-flex';
+    waveformRing.classList.add('live');
+    waveformBars.classList.add('live');
+    startWave();
+  } else if(isRecording && isPaused){
+    btnMainRecord.textContent='▶️';
+    btnStartBottom.textContent='▶️';
+    btnStop.disabled=false;
+    btnPause.disabled=false;
+    btnStopBottom.disabled=false;
+    btnPause.innerHTML='▶️ <span>'+t('btn_resume')+'</span>';
+    statusDot.className='sdot proc';
+    statusText.textContent=t('status_paused');
+    badgeLive.style.display='none';
+    waveformRing.classList.remove('live');
+    waveformBars.classList.remove('live');
+    stopWave();
+  } else {
+    btnMainRecord.textContent='🎙️';
+    btnMainRecord.classList.remove('rec-active');
+    btnStartBottom.textContent='🎙️';
+    btnStartBottom.classList.remove('rec-active');
+    btnStop.disabled=true;
+    btnPause.disabled=true;
+    btnStopBottom.disabled=true;
+    btnPause.innerHTML='⏸️ <span>'+t('btn_pause')+'</span>';
+    statusDot.className='sdot';
+    statusText.textContent=t('status_ready');
+    badgeLive.style.display='none';
+    waveformRing.classList.remove('live');
+    waveformBars.classList.remove('live');
+    stopWave();
+  }
+  updateWordCount();
+}
+
+// ── Waveform ──
+function startWave(){
+  stopWave();
+  waveInterval=setInterval(()=>{
+    const bars=waveformBars.querySelectorAll('.b');
+    bars.forEach(b=>{
+      b.style.height=(Math.random()*24+4)+'px';
     });
+  },140);
+}
+
+function stopWave(){
+  if(waveInterval){clearInterval(waveInterval);waveInterval=null;}
+  const bars=waveformBars.querySelectorAll('.b');
+  bars.forEach((b,i)=>{
+    b.style.height=(6+i%3*5)+'px';
+  });
+}
+
+function updateWordCount(){
+  const text=transcriptArea.innerText||transcriptArea.textContent||'';
+  const w=text.trim().split(/\s+/).filter(x=>x.length>0);
+  wordCountEl.textContent=w.length;
+}
+
+// ── Toast ──
+let toastTimer;
+function showToast(msg,type=''){
+  if(toastTimer)clearTimeout(toastTimer);
+  toast.textContent=msg;
+  toast.className='toast '+type+' show';
+  toastTimer=setTimeout(()=>toast.classList.remove('show'),2800);
+}
+
+// ── Speech Recognition ──
+function initSR(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR)return null;
+  const r=new SR();
+  r.continuous=true;
+  r.interimResults=true;
+  r.lang=langSelect.value||'ar-SA';
+  r.maxAlternatives=1;
+
+  r.onresult=(e)=>{
+    if(isPaused)return;
+    interimTranscript='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      const res=e.results[i];
+      if(res.isFinal){
+        const txt=res[0].transcript.trim();
+        if(txt){
+          finalTranscript+=txt+' ';
+          const label=currentLang==='ar'?'🗣 المتحدث':'🗣 Speaker';
+          transcriptSegments.push({
+            speaker:label+' '+(transcriptSegments.length+1),
+            text:txt,
+            ts:new Date().toISOString()
+          });
+        }
+      } else {
+        interimTranscript+=res[0].transcript;
+      }
+    }
+    renderTranscript();
+  };
+
+  r.onerror=(e)=>{
+    if(e.error==='not-allowed'){showToast(t('toast_mic_error'),'');stopRecording();}
+    else if(e.error==='no-speech'){}
+    else if(e.error==='aborted'){}
+    else showToast('⚠️ '+e.error,'');
+  };
+
+  r.onend=()=>{
+    if(isRecording&&!isPaused&&recognition){
+      try{recognition.start();}catch(ex){}
+    }
+  };
+  return r;
+}
+
+function renderTranscript(){
+  let html='';
+  transcriptSegments.forEach(seg=>{
+    html+=`<span class="sl">${esc(seg.speaker)}</span><span class="fi"> ${esc(seg.text)}</span> `;
+  });
+  if(interimTranscript&&!isPaused){
+    html+=`<span class="it">${esc(interimTranscript)}</span>`;
+  }
+  if(!html.trim()&&transcriptArea.innerText.trim()){}
+  else if(html.trim())transcriptArea.innerHTML=html;
+  transcriptArea.scrollTop=transcriptArea.scrollHeight;
+  updateWordCount();
+}
+
+function esc(s){
+  const d=document.createElement('div');
+  d.textContent=s;
+  return d.innerHTML;
+}
+
+// ── Recording ──
+function startRecording(){
+  if(!recognition)recognition=initSR();
+  if(!recognition){showToast(t('toast_no_browser'),'');return;}
+  recognition.lang=langSelect.value||'ar-SA';
+  finalTranscript='';
+  interimTranscript='';
+  if(transcriptSegments.length>0){
+    transcriptSegments.push({
+      speaker:'─── '+(currentLang==='ar'?'جلسة جديدة':'New Session')+' ───',
+      text:'',
+      ts:new Date().toISOString()
+    });
+  }
+  isRecording=true;
+  isPaused=false;
+  try{recognition.start();}catch(ex){}
+  updateStates();
+  showToast('🎙️ '+(currentLang==='ar'?'بدأ التسجيل...':'Recording started...'),'');
+}
+
+function stopRecording(){
+  isRecording=false;
+  isPaused=false;
+  if(recognition){try{recognition.stop();}catch(ex){}}
+  if(interimTranscript.trim()){
+    finalTranscript+=interimTranscript+' ';
+    const label=currentLang==='ar'?'🗣 المتحدث':'🗣 Speaker';
+    transcriptSegments.push({
+      speaker:label+' '+(transcriptSegments.length+1),
+      text:interimTranscript.trim(),
+      ts:new Date().toISOString()
+    });
+    interimTranscript='';
+  }
+  renderTranscript();
+  updateStates();
+  showToast(t('toast_saved'),'success');
+}
+
+function togglePause(){
+  if(!isRecording)return;
+  isPaused=!isPaused;
+  if(isPaused){
+    if(recognition){try{recognition.stop();}catch(ex){}}
+    if(interimTranscript.trim()){
+      finalTranscript+=interimTranscript+' ';
+      const label=currentLang==='ar'?'🗣 المتحدث':'🗣 Speaker';
+      transcriptSegments.push({
+        speaker:label+' '+(transcriptSegments.length+1),
+        text:interimTranscript.trim(),
+        ts:new Date().toISOString()
+      });
+      interimTranscript='';
+    }
+    renderTranscript();
+  } else {
+    if(recognition){
+      recognition.lang=langSelect.value||'ar-SA';
+      try{recognition.start();}catch(ex){}
+    }
+  }
+  updateStates();
+}
+
+function toggleRecord(){
+  if(!isRecording)startRecording();
+  else if(isPaused){isPaused=false;if(recognition){recognition.lang=langSelect.value;try{recognition.start();}catch(ex){}}updateStates();}
+  else togglePause();
+}
+
+// ── Summary ──
+function getText(){
+  if(transcriptSegments.length===0)return transcriptArea.innerText||transcriptArea.textContent||'';
+  return transcriptSegments.map(s=>s.text).filter(Boolean).join(' ');
+}
+
+function smartSummarize(text){
+  if(!text||text.trim().length<10)return null;
+  const sentences=text.split(/[.!?؟\n]+/).filter(s=>s.trim().length>5);
+  if(!sentences.length)return null;
+
+  const arabicTest=/[\u0600-\u06FF]/.test(text);
+  const decKW=arabicTest?['قرر','قرار','اتفق','اتفقنا','نقرر','نعتمد','اعتمد','نوافق','وافق','حسم','أقر']:['decide','decision','agreed','approve','approved','resolve','resolved','confirm','finalized'];
+  const actKW=arabicTest?['يجب','علينا','مطلوب','سنقوم','سأقوم','سنعمل','تكليف','موعد','تسليم','مهمة','إجراء','خطة','التالي','الخطوة','متابعة','تنفيذ']:['must','need to','should','will do','action','task','assign','deadline','due','follow up','next step','implement','deliver'];
+  const impKW=arabicTest?['مهم','هام','أساسي','ضروري','عاجل','حرج','محوري','رئيسي','أولوية']:['important','critical','essential','urgent','key','crucial','priority','vital','significant','major'];
+
+  const dec=[],act=[],imp=[];
+  sentences.forEach(s=>{
+    const lo=s.toLowerCase();
+    if(decKW.some(k=>lo.includes(k)))dec.push(s.trim());
+    if(actKW.some(k=>lo.includes(k)))act.push(s.trim());
+    if(impKW.some(k=>lo.includes(k)))imp.push(s.trim());
+  });
+
+  const allKey=[...new Set([...imp,...dec,...act])];
+  if(dec.length===0&&act.length===0){
+    const sorted=[...sentences].sort((a,b)=>b.length-a.length);
+    allKey.push(...sorted.slice(0,Math.min(5,sorted.length)));
+  }
+
+  return{
+    keyPoints:[...new Set(allKey)].slice(0,6),
+    decisions:dec.length?[...new Set(dec)]:[sentences[0]?.trim()||'—'],
+    actions:act.length?[...new Set(act)]:[(arabicTest?'مراجعة المحتوى':'Review content')]
+  };
+}
+
+function renderSummary(data){
+  const kp=$('#kpBody'),dec=$('#decBody'),act=$('#actBody');
+  if(!data){
+    kp.textContent=t('no_summary'); kp.className='sum-block-body empty';
+    dec.textContent='—'; dec.className='sum-block-body empty';
+    act.textContent='—'; act.className='sum-block-body empty';
+    return;
+  }
+  kp.innerHTML=data.keyPoints.map(p=>`<div style="margin-bottom:4px">• ${esc(p)}</div>`).join('');
+  kp.className='sum-block-body';
+  dec.innerHTML=data.decisions.map(d=>`<div style="margin-bottom:4px">✅ ${esc(d)}</div>`).join('');
+  dec.className='sum-block-body';
+  act.innerHTML=data.actions.map(a=>`<div style="margin-bottom:4px">📌 ${esc(a)}</div>`).join('');
+  act.className='sum-block-body';
+  summaryData=data;
+}
+
+function doSummarize(){
+  const txt=getText();
+  if(!txt||txt.trim().length<5){showToast(t('toast_no_content'),'');return;}
+  const data=smartSummarize(txt);
+  renderSummary(data);
+  showToast(t('toast_summarized'),'success');
+}
+
+// ── Translate ──
+async function doTranslate(){
+  const txt=getText();
+  if(!txt||txt.trim().length<5){showToast(t('toast_no_content'),'');return;}
+  statusDot.className='sdot proc';
+  statusText.textContent=t('status_processing');
+  translationArea.textContent='…';
+  try{
+    const res=await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(txt.substring(0,500))}&langpair=ar|en&de=meeting@assistant.ai`);
+    const data=await res.json();
+    if(data?.responseData?.translatedText){
+      englishTranslation=data.responseData.translatedText;
+      translationArea.textContent=englishTranslation;
+      showToast(t('toast_translated'),'success');
+    } else {throw new Error('no translation');}
+  } catch(err){
+    englishTranslation='[Translation unavailable. Please try again or use an external translator.]';
+    translationArea.textContent=englishTranslation;
+    showToast('⚠️ '+(currentLang==='ar'?'خدمة الترجمة غير متاحة مؤقتاً':'Translation service unavailable'),'');
+  }
+  if(!isRecording){statusDot.className='sdot';statusText.textContent=t('status_ready');}
+}
+
+// ── Export PDF ──
+function exportPDF(){
+  const txt=getText();
+  if(!txt||txt.trim().length<3){showToast(t('toast_no_content'),'');return;}
+  const now=new Date();
+  const dateStr=now.toLocaleDateString(currentLang==='ar'?'ar-SA':'en-US',{year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  $('#pdfDate').textContent=dateStr;
+  $('#pdfTranscript').textContent=txt;
+
+  let sumHTML='';
+  if(summaryData){
+    sumHTML+=`<p><strong>🔑 ${currentLang==='ar'?'النقاط الرئيسية':'Key Points'}:</strong><br>${summaryData.keyPoints.map(p=>'• '+p).join('<br>')}</p>`;
+    sumHTML+=`<p style="margin-top:10px;"><strong>✅ ${currentLang==='ar'?'القرارات':'Decisions'}:</strong><br>${summaryData.decisions.map(d=>'• '+d).join('<br>')}</p>`;
+    sumHTML+=`<p style="margin-top:10px;"><strong>📋 ${currentLang==='ar'?'المهام':'Action Items'}:</strong><br>${summaryData.actions.map(a=>'• '+a).join('<br>')}</p>`;
+  } else {
+    sumHTML=`<p>${currentLang==='ar'?'لا يوجد ملخص':'No summary available'}</p>`;
+  }
+  $('#pdfSummary').innerHTML=sumHTML;
+
+  const trans=englishTranslation||(translationArea.innerText?.trim())||'';
+  if(trans&&trans.length>5&&!trans.includes('Translation unavailable')){
+    $('#pdfTranslation').textContent=trans;
+    $('#pdfTranslationSection').style.display='block';
+  } else {
+    $('#pdfTranslationSection').style.display='none';
+  }
+
+  const opt={
+    margin:[10,10,10,10],
+    filename:'meeting-minutes-'+now.toISOString().slice(0,10)+'.pdf',
+    image:{type:'jpeg',quality:0.95},
+    html2canvas:{scale:2,useCORS:true,backgroundColor:'#ffffff'},
+    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
+    pagebreak:{mode:['avoid-all','css','legacy']},
+  };
+
+  html2pdf().set(opt).from(pdfTemplate).save()
+    .then(()=>showToast(t('toast_pdf_exported'),'success'))
+    .catch(()=>showToast('⚠️ PDF export failed',''));
+}
+
+// ── Clear & Copy ──
+function clearAll(){
+  finalTranscript='';
+  interimTranscript='';
+  transcriptSegments=[];
+  transcriptArea.innerHTML='';
+  translationArea.textContent='';
+  englishTranslation='';
+  summaryData=null;
+  renderSummary(null);
+  updateWordCount();
+  showToast(t('toast_cleared'),'');
+}
+
+function copyAll(){
+  const txt=getText();
+  if(!txt||txt.trim().length<3){showToast(t('toast_no_content'),'');return;}
+  let copy=txt;
+  if(englishTranslation&&englishTranslation.length>5)copy+='\n\n--- English Translation ---\n'+englishTranslation;
+  navigator.clipboard.writeText(copy)
+    .then(()=>showToast(t('toast_copied'),'success'))
+    .catch(()=>showToast('⚠️ '+(currentLang==='ar'?'فشل النسخ':'Copy failed'),''));
+}
+
+// ── Event Listeners ──
+btnMainRecord.addEventListener('click',toggleRecord);
+btnStartBottom.addEventListener('click',toggleRecord);
+btnStop.addEventListener('click',stopRecording);
+btnStopBottom.addEventListener('click',stopRecording);
+btnPause.addEventListener('click',togglePause);
+btnSummarize.addEventListener('click',doSummarize);
+btnSumBottom.addEventListener('click',doSummarize);
+btnTranslate.addEventListener('click',doTranslate);
+btnExportPDF.addEventListener('click',exportPDF);
+btnExportBottom.addEventListener('click',exportPDF);
+btnClearAll.addEventListener('click',clearAll);
+btnCopyAll.addEventListener('click',copyAll);
+
+btnLangUI.addEventListener('click',()=>{
+  currentLang=currentLang==='ar'?'en':'ar';
+  updateUI();
+  if(recognition&&!isRecording){
+    recognition.lang=langSelect.value;
+  }
+  showToast(currentLang==='ar'?'🌐 تم التبديل للعربية':'🌐 Switched to English','');
+});
+
+langSelect.addEventListener('change',()=>{
+  if(recognition)recognition.lang=langSelect.value;
+});
+
+transcriptArea.addEventListener('input',()=>{
+  updateWordCount();
+  if(!isRecording){
+    const manual=transcriptArea.innerText||transcriptArea.textContent||'';
+    if(manual.trim()&&transcriptSegments.length===0){
+      transcriptSegments.push({
+        speaker:currentLang==='ar'?'✍️ ملاحظة':'✍️ Note',
+        text:manual.trim(),
+        ts:new Date().toISOString()
+      });
+    }
+  }
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown',(e)=>{
+  if(e.ctrlKey&&e.key==='s'){e.preventDefault();doSummarize();}
+  if(e.ctrlKey&&e.key==='p'){e.preventDefault();exportPDF();}
+  if(e.ctrlKey&&e.key==='t'){e.preventDefault();doTranslate();}
+  if(e.ctrlKey&&e.shiftKey&&e.key==='R'){e.preventDefault();toggleRecord();}
+});
+
+// ── Init ──
+function init(){
+  updateUI();
+  updateSigStamp();
+  try{
+    recognition=initSR();
+    if(recognition)console.log('✅ Speech recognition ready');
+  } catch(e){console.warn('SR init:',e.message);}
+}
+
+init();
+
+window.addEventListener('beforeunload',()=>{
+  if(isRecording&&recognition){try{recognition.stop();}catch(ex){}}
+  stopWave();
+});
+
+console.log('🚀 مساعد الاجتماعات الذكي — محمد البرشي — جاهز');
+console.log('⌨️ Ctrl+S=ملخص | Ctrl+P=PDF | Ctrl+T=ترجمة | Ctrl+Shift+R=تسجيل');
+})();
 </script>
 
 </body>
